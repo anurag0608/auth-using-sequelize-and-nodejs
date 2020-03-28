@@ -20,7 +20,7 @@ shouldCompress = (req, res) => {
   };
   
 //import models
-const { User, Room, Admin } = require('./sequelize');
+const { User, Admin } = require('./sequelize');
 
 app.set('trust proxy', 1);
 app.set('view engine','ejs');

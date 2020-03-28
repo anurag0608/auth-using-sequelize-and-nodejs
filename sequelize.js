@@ -1,6 +1,5 @@
 const Sequelize = require('sequelize'),
 UserModel = require('./models/user'),
-RoomModel = require('./models/room'),
 AdminModel = require('./models/admin'),
 chalk = require('chalk');
 const dotenv = require('dotenv');
@@ -20,9 +19,8 @@ const sequelize = new Sequelize(process.env.DB_NAME,process.env.DB_USERNAME,proc
   //Sequelize has many static methods
   // we can get INT type by simply writing Sequelize.INTEGER
  //sequelize is associated with database
-  const User = UserModel(sequelize, Sequelize);
-  const Room = RoomModel(sequelize, Sequelize);
-  const Admin = AdminModel(sequelize, Sequelize);
+  const User  = UserModel(sequelize, Sequelize),
+        Admin = AdminModel(sequelize, Sequelize);
   //sync with database
   sequelize.sync()
   .then(()=>{
@@ -30,7 +28,6 @@ const sequelize = new Sequelize(process.env.DB_NAME,process.env.DB_USERNAME,proc
   });
   module.exports = {
       User,
-      Room,
       Admin
   };
   
