@@ -20,7 +20,7 @@ shouldCompress = (req, res) => {
   };
   
 //import models
-const { User, Admin } = require('./sequelize');
+const { User, Admin, Session } = require('./sequelize');
 
 app.set('trust proxy', 1);
 app.set('view engine','ejs');
@@ -85,15 +85,17 @@ app.post('/login',(req, res)=>{
             bcrypt.compare(password,user.password)
             .then(passwordMatch=>{
                 if(passwordMatch){
+                   
+                   
+                    const  JWT = create_token(user.dataValues.id,"60000");
                     //login success
-                    const JWT = create_token(user.username,"60000");
-                    console.log("login success");
-                    res.cookie("jwt", JWT, {expire: 60000 + Date.now(),httpOnly: true,sameSite:true});
-                    //managing session using express session, just using to check login status
-                    console.log(user.dataValues.id)
-                    req.session.user_id = user.dataValues.id;
-                    req.session.status = true;
-                    res.redirect('/');
+                              console.log("login success");
+                              res.cookie("jwt", JWT, {expire: 60000 + Date.now(),httpOnly: true,sameSite:true});
+                              //managing session using express session, just using to check login status
+                              console.log(user.dataValues.id)
+                              req.session.user_id = user.dataValues.id;
+                              req.session.status = true;
+                              res.redirect('/');
                 }
             })
         }else{
@@ -174,17 +176,17 @@ function validate_token(req, res, next){
             res.clearCookie("jwt");
             res.redirect("/login");
         }else{
-           // console.log(decoded);
-            next();
+           next();
+            
         }
     });
  }
- function create_token(username,expiresIn){
-
-    const payload = { user: username };
-    const options = { expiresIn:expiresIn, issuer: 'AxDu' };
-    const secret = config.jwt_secret;
-    const token = jwt.sign(payload, secret, options);
-    return token;
-
+ function create_token(userid,expiresIn){
+    
+        const payload = { userid: userid };
+        const options = { expiresIn:expiresIn, issuer: 'AxDu' };
+        const secret = config.jwt_secret;
+        const token = jwt.sign(payload, secret, options);
+        return token;
+    
 }
